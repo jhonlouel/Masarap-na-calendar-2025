@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .calendar-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentDate = new Date();
+            let month = currentDate.getMonth();
+            let year = currentDate.getFullYear();
+
+            function renderCalendar() {
+                const firstDay = new Date(year, month, 1).getDay();
+                const lastDate = new Date(year, month + 1, 0).getDate();
+                const calendarBody = document.getElementById("calendar-body");
+                const monthYear = document.getElementById("month-year");
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                
+                monthYear.textContent = `${monthNames[month]} ${year}`;
+                calendarBody.innerHTML = "";
+                let date = 1;
+                for (let i = 0; i < 6; i++) {
+                    let row = document.createElement("tr");
+                    for (let j = 0; j < 7; j++) {
+                        let cell = document.createElement("td");
+                        if (i === 0 && j < firstDay) {
+                            cell.textContent = "";
+                        } else if (date > lastDate) {
+                            break;
+                        } else {
+                            cell.textContent = date;
+                            date++;
+                        }
+                        row.appendChild(cell);
+                    }
+                    calendarBody.appendChild(row);
+                }
+            }
+            
+            document.getElementById("prev").addEventListener("click", function () {
+                month--;
+                if (month < 0) {
+                    month = 11;
+                    year--;
+                }
+                renderCalendar();
+            });
+            
+            document.getElementById("next").addEventListener("click", function () {
+                month++;
+                if (month > 11) {
+                    month = 0;
+                    year++;
+                }
+                renderCalendar();
+            });
+            
+            renderCalendar();
+        });
+    </script>
+</head>
+<body class="container mt-5">
+    <div class="calendar-container">
+        <div class="text-center mb-3">
+            <button id="prev" class="btn btn-primary">&#8592; Previous</button>
+            <span id="month-year" class="mx-3"></span>
+            <button id="next" class="btn btn-primary">Next &#8594;</button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body"></tbody>
+        </table>
+    </div>
+</body>
+</html>
